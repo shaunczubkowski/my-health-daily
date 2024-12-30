@@ -1,28 +1,11 @@
 type BloodPressureReading = {
-  systolic: number | undefined;
-  diastolic: number | undefined;
-  pulse: number | undefined;
-  position?: Position | undefined;
-  arm?: Arm | undefined;
-  medicationTaken?: boolean | undefined;
+  _id?: number | "new";
+  systolic?: string | undefined;
+  diastolic?: string | undefined;
+  pulse?: string | undefined;
+  position?: "sitting" | "standing" | "lying" | undefined;
+  arm?: "left" | "right" | undefined;
   notes?: string | undefined;
-  symptoms?: Symptoms[] | undefined;
+  createdAt?: string | undefined;
+  updatedAt?: string | undefined;
 };
-
-enum Position {
-  SITTING = "Sitting",
-  STANDING = "Standing",
-  LYING = "Lying",
-}
-
-enum Arm {
-  LEFT = "Left",
-  RIGHT = "Right",
-}
-
-enum Symptoms {
-  HEADACHE = "Headache",
-  DIZZINESS = "Dizziness",
-  CHEST_PAIN = "Chest pain",
-  SHORTNESS_OF_BREATH = "Shortness of breath",
-}

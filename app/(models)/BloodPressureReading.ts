@@ -10,9 +10,7 @@ const bloodPressureReadingSchema = new Schema(
     pulse: Number,
     position: String,
     arm: String,
-    medication_taken: Boolean,
     notes: String,
-    symptoms: String,
   },
   { timestamps: true }
 );
