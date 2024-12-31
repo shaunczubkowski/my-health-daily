@@ -9,7 +9,14 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from "@/app/(components)/forms/RadioGroup";
-import { Textarea } from "../forms/Textarea";
+import { Textarea } from "@/app/(components)/forms/Textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/app/(components)/forms/Select";
 
 // TODO: Add better form validation
 const BloodPressureReadingForm = ({
@@ -21,7 +28,7 @@ const BloodPressureReadingForm = ({
   const router = useRouter();
 
   const startingReadingData: BloodPressureReading = {
-    _id: "new",
+    _id: EDIT_MODE ? reading._id : "new",
     systolic: "",
     diastolic: "",
     pulse: "",
@@ -47,6 +54,9 @@ const BloodPressureReadingForm = ({
     const value = e.currentTarget.value;
     const name = e.currentTarget.name;
 
+    console.log(e);
+    console.log(value, name);
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -55,16 +65,31 @@ const BloodPressureReadingForm = ({
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const res = await fetch("/api/BloodPressureReadings", {
-      method: "POST",
-      body: JSON.stringify({ formData }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
 
-    if (!res.ok) {
-      throw new Error("[BloodPressureReadings] Failed to create reading");
+    if (EDIT_MODE) {
+      const res = await fetch(`/api/BloodPressureReadings/${reading._id}`, {
+        method: "PUT",
+        body: JSON.stringify({ formData }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("[BloodPressureReadings] Failed to update reading");
+      }
+    } else {
+      const res = await fetch(`/api/BloodPressureReadings`, {
+        method: "POST",
+        body: JSON.stringify({ formData }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error("[BloodPressureReadings] Failed to create reading");
+      }
     }
 
     router.refresh();
@@ -114,8 +139,16 @@ const BloodPressureReadingForm = ({
             value={formData.pulse}
           />
         </Label>
-        <Label htmlFor="arm">Arm</Label>
-        <RadioGroup
+        <Select onValueChange={handleOnChange} defaultValue={formData.arm}>
+          <SelectTrigger className="w-44">
+            <SelectValue placeholder="Arm" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="right">Right</SelectItem>
+            <SelectItem value="left">Left</SelectItem>
+          </SelectContent>
+        </Select>
+        {/* <RadioGroup
           id="arm"
           defaultValue={formData.arm}
           onChange={handleOnChange}
@@ -128,12 +161,12 @@ const BloodPressureReadingForm = ({
             <RadioGroupItem value="right" id="right" />
             <Label htmlFor="right">Right Arm</Label>
           </div>
-        </RadioGroup>
-        <Label htmlFor="position">Positions</Label>
+        </RadioGroup> */}
+        <Label htmlFor="position">Position</Label>
         <RadioGroup
           id="position"
           defaultValue={formData.position}
-          onChange={handleOnChange}
+          onValueChange={handleOnChange}
         >
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="sitting" id="sitting" />
@@ -153,7 +186,9 @@ const BloodPressureReadingForm = ({
           placeholder="Symptoms, medication, notes..."
         />
         {/* TODO: dynamically change button value to edit if changing a reading */}
-        <Button type="submit" value="Add" />
+        <Button variant={"default"} type="submit">
+          {EDIT_MODE ? "Update" : "Save"}
+        </Button>
       </form>
     </div>
   );

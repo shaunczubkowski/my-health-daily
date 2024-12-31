@@ -1,7 +1,6 @@
 import BloodPressureReadingForm from "@/app/(components)/BloodPressureReadings/BloodPressureReadingForm";
 
 const getReadingById = async (id: string) => {
-  console.log(id);
   try {
     const res = await fetch(
       `http://localhost:3000/api/BloodPressureReadings/${id}`,
@@ -21,13 +20,17 @@ const getReadingById = async (id: string) => {
 };
 
 let updateReadingData: BloodPressureReading = {};
-const BloodPressureReadingsPage = async ({ id }: { id: string }) => {
+const BloodPressureReadingsPage = async ({
+  params,
+}: {
+  params: { id: string };
+}) => {
+  const { id } = await params;
   const EDIT_MODE = id === "new" ? false : true;
 
   if (EDIT_MODE) {
     const currentReadingData = await getReadingById(id);
-    console.log(currentReadingData);
-    updateReadingData = currentReadingData;
+    updateReadingData = currentReadingData.foundReading;
   } else {
     updateReadingData = {
       _id: "new",

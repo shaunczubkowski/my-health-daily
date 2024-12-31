@@ -1,19 +1,47 @@
 import BloodPressureReading from "../../../(models)/BloodPressureReading";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
+interface ReqProps {
+  params: {
+    id: string;
+  };
+}
+
+export async function GET(req: NextRequest, { params }: ReqProps) {
   try {
-    const body = await req.json();
-    const bloodPressureReadingData = body.formData;
-    await BloodPressureReading.create(bloodPressureReadingData);
-    return NextResponse.json({ message: "Reading Created" }, { status: 201 });
+    const { id } = await params;
+    const foundReading = await BloodPressureReading.findOne({ _id: id });
+    return NextResponse.json({ foundReading }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
+    console.log(error);
+    return NextResponse.json(
+      { message: "[BloodPressureReadings]: Error", error },
+      { status: 500 }
+    );
   }
 }
 
-export async function GET({ params }: { params: { id: string } }) {
-  const { id } = params;
-  const foundReading = await BloodPressureReading.findOne({ _id: id });
-  return NextResponse.json({ foundReading }, { status: 200 });
+export async function PUT(req: NextRequest, { params }: ReqProps) {
+  try {
+    const { id } = await params;
+
+    const body = await req.json();
+    const readingData = body.formData;
+
+    console.log("***********");
+    console.log(id);
+    console.log(readingData);
+
+    const updateReadingData = await BloodPressureReading.findByIdAndUpdate(id, {
+      ...readingData,
+    });
+
+    return NextResponse.json(updateReadingData, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { message: "[BloodPressureReadings]: Error", error },
+      { status: 500 }
+    );
+  }
 }
