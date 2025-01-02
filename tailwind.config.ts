@@ -81,7 +81,7 @@ export default {
         "green-vivid-700": "#0E7817",
         "green-vivid-800": "#07600E",
         "green-vivid-900": "#014807",
-        "bp-secondary-text": "#9AA5B1",
+        "bp-secondary-text": "#3E4C59",
         "bp-normal-bg": "#DCFCE7",
         "bp-normal-primary-text": "#166534",
         "bp-elevated-bg": "#FEF9C3",

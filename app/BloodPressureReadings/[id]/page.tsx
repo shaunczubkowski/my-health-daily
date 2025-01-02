@@ -37,7 +37,12 @@ const BloodPressureReadingsPage = async ({
     };
   }
 
-  return <BloodPressureReadingForm reading={updateReadingData} />;
+  return (
+    <div className="p-4 flex flex-col">
+      <h1 className="my-3 self-start text-xl">{EDIT_MODE ? "Edit" : "Add"}</h1>
+      <BloodPressureReadingForm reading={updateReadingData} />
+    </div>
+  );
 };
 
 export default BloodPressureReadingsPage;

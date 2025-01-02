@@ -28,10 +28,6 @@ export async function PUT(req: NextRequest, { params }: ReqProps) {
     const body = await req.json();
     const readingData = body.formData;
 
-    console.log("***********");
-    console.log(id);
-    console.log(readingData);
-
     const updateReadingData = await BloodPressureReading.findByIdAndUpdate(id, {
       ...readingData,
     });

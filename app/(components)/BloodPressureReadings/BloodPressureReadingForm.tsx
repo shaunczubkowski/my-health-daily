@@ -5,10 +5,6 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/app/(components)/buttons/Button";
 import { Label } from "@/app/(components)/forms/Label";
 import { Input } from "@/app/(components)/forms/Input";
-import {
-  RadioGroup,
-  RadioGroupItem,
-} from "@/app/(components)/forms/RadioGroup";
 import { Textarea } from "@/app/(components)/forms/Textarea";
 import {
   Select,
@@ -17,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/app/(components)/forms/Select";
+import Link from "next/link";
 
 // TODO: Add better form validation
 const BloodPressureReadingForm = ({
@@ -44,6 +41,7 @@ const BloodPressureReadingForm = ({
     startingReadingData["arm"] = reading.arm;
     startingReadingData["position"] = reading.position;
     startingReadingData["notes"] = reading.notes;
+    startingReadingData["updatedAt"] = reading.updatedAt;
   }
 
   const [formData, setFormData] =
@@ -53,9 +51,6 @@ const BloodPressureReadingForm = ({
   const handleOnChange = (e: any) => {
     const value = e.currentTarget.value;
     const name = e.currentTarget.name;
-
-    console.log(e);
-    console.log(value, name);
 
     setFormData((prev) => ({
       ...prev,
@@ -79,6 +74,7 @@ const BloodPressureReadingForm = ({
         throw new Error("[BloodPressureReadings] Failed to update reading");
       }
     } else {
+      console.log(JSON.stringify(formData));
       const res = await fetch(`/api/BloodPressureReadings`, {
         method: "POST",
         body: JSON.stringify({ formData }),
@@ -97,100 +93,107 @@ const BloodPressureReadingForm = ({
   };
 
   return (
-    <div className="flex justify-center">
-      <form
-        onSubmit={handleSubmit}
-        method="post"
-        className="flex flex-col gap-3 w-1/2"
+    <form onSubmit={handleSubmit} method="post" className="flex flex-col gap-3">
+      <Label htmlFor="date">Date</Label>
+      <Input
+        id="updatedAt"
+        value={
+          reading.updatedAt
+            ? new Date(reading.updatedAt || "").toLocaleString("en-US", {
+                month: "short",
+                day: "2-digit",
+                year: "numeric",
+                hour12: true,
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            : "Now"
+        }
+        name="updatedAt"
+        type="text"
+        disabled={true}
+      />
+      <Label htmlFor="systolic">Systolic</Label>
+      <Input
+        id="systolic"
+        name="systolic"
+        type="number"
+        onChange={handleOnChange}
+        required={true}
+        value={formData.systolic}
+        autoFocus
+      />
+
+      <Label htmlFor="diastolic">Diastolic</Label>
+      <Input
+        id="diastolic"
+        name="diastolic"
+        type="number"
+        onChange={handleOnChange}
+        required={true}
+        value={formData.diastolic}
+      />
+
+      <Label htmlFor="pulse">Pulse</Label>
+      <Input
+        id="pulse"
+        name="pulse"
+        type="number"
+        onChange={handleOnChange}
+        required={true}
+        value={formData.pulse}
+      />
+      <Label htmlFor="arm">Arm</Label>
+      <Select
+        onValueChange={(val) =>
+          setFormData((prev) => ({ ...prev, arm: val as "left" | "right" }))
+        }
+        defaultValue={formData.arm}
       >
-        <Label htmlFor="systolic">
-          Systolic
-          <Input
-            id="systolic"
-            name="systolic"
-            type="number"
-            onChange={handleOnChange}
-            required={true}
-            value={formData.systolic}
-            autoFocus
-          />
-        </Label>
+        <SelectTrigger className="w-44">
+          <SelectValue placeholder="Arm" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="right">Right</SelectItem>
+          <SelectItem value="left">Left</SelectItem>
+        </SelectContent>
+      </Select>
+      <Label htmlFor="position">Position</Label>
+      <Select
+        onValueChange={(val) =>
+          setFormData((prev) => ({
+            ...prev,
+            position: val as "sitting" | "standing" | "lying",
+          }))
+        }
+        defaultValue={formData.position}
+      >
+        <SelectTrigger className="w-44">
+          <SelectValue placeholder="position" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="sitting">Sitting</SelectItem>
+          <SelectItem value="standing">Standing</SelectItem>
+          <SelectItem value="lying">Lying</SelectItem>
+        </SelectContent>
+      </Select>
+      <Textarea
+        onChange={handleOnChange}
+        placeholder="Symptoms, medication, notes, etc..."
+        value={formData.notes}
+        id="notes"
+        name="notes"
+        rows={5}
+      />
+      {/* TODO: dynamically change button value to edit if changing a reading */}
+      <Button variant={"default"} type="submit">
+        {EDIT_MODE ? "Update" : "Save"}
+      </Button>
 
-        <Label htmlFor="diastolic">
-          Diastolic
-          <Input
-            id="diastolic"
-            name="diastolic"
-            type="number"
-            onChange={handleOnChange}
-            required={true}
-            value={formData.diastolic}
-          />
-        </Label>
-
-        <Label htmlFor="pulse">
-          Pulse
-          <Input
-            id="pulse"
-            name="pulse"
-            type="number"
-            onChange={handleOnChange}
-            required={true}
-            value={formData.pulse}
-          />
-        </Label>
-        <Select onValueChange={handleOnChange} defaultValue={formData.arm}>
-          <SelectTrigger className="w-44">
-            <SelectValue placeholder="Arm" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="right">Right</SelectItem>
-            <SelectItem value="left">Left</SelectItem>
-          </SelectContent>
-        </Select>
-        {/* <RadioGroup
-          id="arm"
-          defaultValue={formData.arm}
-          onChange={handleOnChange}
-        >
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="left" id="left" />
-            <Label htmlFor="left">Left Arm</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="right" id="right" />
-            <Label htmlFor="right">Right Arm</Label>
-          </div>
-        </RadioGroup> */}
-        <Label htmlFor="position">Position</Label>
-        <RadioGroup
-          id="position"
-          defaultValue={formData.position}
-          onValueChange={handleOnChange}
-        >
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="sitting" id="sitting" />
-            <Label htmlFor="sitting">Sitting</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="standing" id="standing" />
-            <Label htmlFor="standing">Standing</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="lying" id="lying" />
-            <Label htmlFor="lying">Lying</Label>
-          </div>
-        </RadioGroup>
-        <Textarea
-          onChange={handleOnChange}
-          placeholder="Symptoms, medication, notes..."
-        />
-        {/* TODO: dynamically change button value to edit if changing a reading */}
-        <Button variant={"default"} type="submit">
-          {EDIT_MODE ? "Update" : "Save"}
-        </Button>
-      </form>
-    </div>
+      <Button variant={"link"}>
+        <Link href={"/BloodPressureReadings/"}>Cancel</Link>
+      </Button>
+    </form>
   );
 };
 
