@@ -25,7 +25,7 @@ const BloodPressureReadingForm = ({
   const router = useRouter();
 
   const startingReadingData: BloodPressureReading = {
-    _id: EDIT_MODE ? reading._id : "new",
+    _id: EDIT_MODE ? reading._id : undefined,
     systolic: "",
     diastolic: "",
     pulse: "",
@@ -74,7 +74,6 @@ const BloodPressureReadingForm = ({
         throw new Error("[BloodPressureReadings] Failed to update reading");
       }
     } else {
-      console.log(JSON.stringify(formData));
       const res = await fetch(`/api/BloodPressureReadings`, {
         method: "POST",
         body: JSON.stringify({ formData }),
