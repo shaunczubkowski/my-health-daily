@@ -7,10 +7,13 @@ export const dynamic = "force-dynamic";
 
 const getReadings = async () => {
   try {
-    const res = await fetch("http://localhost:3000/api/BloodPressureReadings", {
-      method: "GET",
-      cache: "no-store",
-    });
+    const res = await fetch(
+      `${process.env.API_BASE_URL}/BloodPressureReadings`,
+      {
+        method: "GET",
+        cache: "no-store",
+      },
+    );
 
     if (!res.ok) {
       throw new Error("Failed to fetch blood pressure readings.");
