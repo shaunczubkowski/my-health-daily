@@ -88,7 +88,7 @@ const BloodPressureReadingForm = ({
     }
 
     router.refresh();
-    router.push("/");
+    router.push("/BloodPressureReadings");
   };
 
   return (
@@ -190,7 +190,7 @@ const BloodPressureReadingForm = ({
       </Button>
 
       <Button variant={"link"}>
-        <Link href={"/BloodPressureReadings/"}>Cancel</Link>
+        <Link href={"/BloodPressureReadings"}>Cancel</Link>
       </Button>
     </form>
   );

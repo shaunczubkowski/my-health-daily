@@ -6,7 +6,7 @@ const getReadingById = async (id: string) => {
       `http://localhost:3000/api/BloodPressureReadings/${id}`,
       {
         cache: "no-store",
-      }
+      },
     );
 
     if (!res.ok) {
@@ -23,7 +23,7 @@ let updateReadingData: BloodPressureReading = {};
 const BloodPressureReadingsPage = async ({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) => {
   const { id } = await params;
   const EDIT_MODE = id === "new" ? false : true;
@@ -38,7 +38,7 @@ const BloodPressureReadingsPage = async ({
   }
 
   return (
-    <div className="p-4 flex flex-col">
+    <div className="flex flex-col p-4">
       <h1 className="my-3 self-start text-xl">{EDIT_MODE ? "Edit" : "Add"}</h1>
       <BloodPressureReadingForm reading={updateReadingData} />
     </div>

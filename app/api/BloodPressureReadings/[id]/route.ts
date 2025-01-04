@@ -1,13 +1,10 @@
 import BloodPressureReading from "../../../(models)/BloodPressureReading";
 import { NextRequest, NextResponse } from "next/server";
 
-interface ReqProps {
-  params: {
-    id: string;
-  };
-}
-
-export async function GET(req: NextRequest, { params }: ReqProps) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   try {
     const { id } = await params;
     const foundReading = await BloodPressureReading.findOne({ _id: id });
@@ -16,12 +13,15 @@ export async function GET(req: NextRequest, { params }: ReqProps) {
     console.log(error);
     return NextResponse.json(
       { message: "[BloodPressureReadings]: Error", error },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
-export async function PUT(req: NextRequest, { params }: ReqProps) {
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   try {
     const { id } = await params;
 
@@ -37,7 +37,7 @@ export async function PUT(req: NextRequest, { params }: ReqProps) {
     console.log(error);
     return NextResponse.json(
       { message: "[BloodPressureReadings]: Error", error },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
