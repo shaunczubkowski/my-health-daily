@@ -6,10 +6,10 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 const getReadings = async () => {
-  console.log(process.env.VERCEL_PROJECT_PRODUCTION_URL);
+  console.log(process.env.NEXT_PUBLIC_VERCEL_URL);
   try {
     const res = await fetch(
-      `${process.env.VERCEL_PROJECT_PRODUCTION_URL}/BloodPressureReadings`,
+      `${process.env.NEXT_PUBLIC_VERCEL_URL}/BloodPressureReadings`,
       {
         method: "GET",
         cache: "no-store",
