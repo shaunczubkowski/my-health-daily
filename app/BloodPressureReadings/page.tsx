@@ -3,12 +3,10 @@ import BloodPressureReadingCard from "../(components)/BloodPressureReadings/Bloo
 import { faHeartCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 
-export const dynamic = "force-dynamic";
-
 const getReadings = async () => {
   try {
     const res = await fetch(
-      `${process.env.API_BASE_URL}/BloodPressureReadings`,
+      `${process.env.NEXT_PUBLIC_API_URL}/BloodPressureReadings`,
       {
         method: "GET",
         cache: "no-store",

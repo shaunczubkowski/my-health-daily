@@ -3,7 +3,7 @@ import BloodPressureReadingForm from "@/app/(components)/BloodPressureReadings/B
 const getReadingById = async (id: string) => {
   try {
     const res = await fetch(
-      `${process.env.API_BASE_URL}/BloodPressureReadings/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/BloodPressureReadings/${id}`,
       {
         cache: "no-store",
       },
