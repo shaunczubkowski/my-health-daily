@@ -1,6 +1,7 @@
 import BloodPressureReadingForm from "@/app/(components)/BloodPressureReadings/BloodPressureReadingForm";
 
 const getReadingById = async (id: string) => {
+  console.log(process.env.VERCEL_PROJECT_PRODUCTION_URL);
   try {
     const res = await fetch(
       `${process.env.VERCEL_PROJECT_PRODUCTION_URL}/BloodPressureReadings/${id}`,
