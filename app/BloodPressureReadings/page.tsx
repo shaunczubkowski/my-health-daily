@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 const getReadings = async () => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/BloodPressureReadings`,
+      `${process.env.VERCEL_PROJECT_PRODUCTION_URL}/BloodPressureReadings`,
       {
         method: "GET",
         cache: "no-store",
